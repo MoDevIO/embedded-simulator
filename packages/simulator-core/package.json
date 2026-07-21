@@ -16,5 +16,11 @@
       "onFail": "download"
     }
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "avr8js": "^0.21.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.1"
+  }
 }
