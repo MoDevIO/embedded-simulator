@@ -8,3 +8,10 @@ export enum PinMode {
   Output,
   InputPullup,
 }
+
+export enum PinType {
+  Digital,
+  Analog,
+}
+
+export type PinValue = PinState | number;

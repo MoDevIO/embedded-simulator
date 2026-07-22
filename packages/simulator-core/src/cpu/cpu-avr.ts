@@ -31,7 +31,7 @@ export class AVRCPU implements CPU {
           avrPort.pinState(pin.number) === AVRPinState.High
             ? PinState.High
             : PinState.Low;
-        pin.setState(state);
+        pin.setValue(state);
       }
     });
 

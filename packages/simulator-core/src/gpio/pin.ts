@@ -1,24 +1,32 @@
-import { PinState, PinMode } from "./state.js";
+import { PinState, PinMode, PinType } from "./state.js";
+import type { PinValue } from "./state.js";
 
 export class Pin {
   readonly number: number;
 
-  private state: PinState;
+  private type: PinType;
+  private value: PinValue;
   private mode: PinMode;
-  private listeners: ((state: PinState) => void)[] = [];
 
-  constructor(number: number, mode: PinMode) {
+  private listeners: ((value: PinValue) => void)[] = [];
+
+  constructor(number: number, mode: PinMode, type: PinType = PinType.Digital) {
     this.number = number;
+    this.type = type;
     this.mode = mode;
-    this.state = PinState.Low;
+    this.value = PinState.Low;
   }
 
-  addListener(listener: (state: PinState) => void): void {
+  addListener(listener: (value: PinValue) => void): void {
     this.listeners.push(listener);
   }
 
-  getState(): PinState {
-    return this.state;
+  getType(): PinType {
+    return this.type;
+  }
+
+  getValue(): PinValue {
+    return this.value;
   }
 
   getMode(): PinMode {
@@ -31,14 +39,14 @@ export class Pin {
     this.mode = mode;
   }
 
-  setState(state: PinState): void {
-    if (this.state === state) return;
+  setValue(value: PinValue): void {
+    if (this.value === value) return;
 
-    this.state = state;
+    this.value = value;
 
     // Send event to listeners
     for (const listener of this.listeners) {
-      listener(state);
+      listener(value);
     }
   }
 }

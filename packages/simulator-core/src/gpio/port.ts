@@ -31,6 +31,6 @@ export class Port {
 
   setPinState(pinNumber: number, state: boolean): void {
     const pin = this.getPin(pinNumber);
-    pin.setState(state ? PinState.High : PinState.Low);
+    pin.setValue(state ? PinState.High : PinState.Low);
   }
 }
