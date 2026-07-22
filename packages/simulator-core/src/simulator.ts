@@ -2,12 +2,19 @@ import { parse } from "intel-hex";
 
 import type { CPU } from "./cpu/cpu.js";
 import { Scheduler } from "./scheduler/scheduler.js";
+import { GPIO } from "./gpio/gpio.js";
 
 export class Simulator {
   private scheduler: Scheduler;
 
-  constructor(private cpu: CPU) {
+  readonly gpio: GPIO;
+  readonly cpu: CPU;
+
+  constructor(cpu: CPU) {
     this.scheduler = new Scheduler(cpu);
+
+    this.cpu = cpu;
+    this.gpio = cpu.gpio;
   }
 
   loadFirmware(hex: string): void {
