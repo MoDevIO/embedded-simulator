@@ -1,4 +1,5 @@
 import { Port } from "./port.js";
+import { PinValue } from "./state.js";
 
 export class GPIO {
   readonly ports: Port[];
@@ -15,5 +16,19 @@ export class GPIO {
     }
 
     return port;
+  }
+
+  read(portName: string, pinNumber: number): PinValue {
+    const port = this.getPort(portName);
+    const pin = port.getPin(pinNumber);
+
+    return pin.getValue();
+  }
+
+  write(portName: string, pinNumber: number, value: PinValue): void {
+    const port = this.getPort(portName);
+    const pin = port.getPin(pinNumber);
+
+    pin.setValue(value);
   }
 }

@@ -2,17 +2,18 @@ import { GPIO } from "../gpio.js";
 import { Port } from "../port.js";
 import { Pin } from "../pin.js";
 import { PinMode, PinType } from "../state.js";
+import { Board } from "./board.js";
 
 type PinMapping = {
   digital: {
     [pinNumber: number]: { port: string; pin: number };
   };
   analog: {
-    [pinName: string]: { port: string; pin: number };
+    [pinName: `A${number}`]: { port: string; pin: number };
   };
 };
 
-export class ArduinoUno {
+export class ArduinoUno implements Board {
   readonly gpio: GPIO;
   readonly pinMapping: PinMapping;
 
