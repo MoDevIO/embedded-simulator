@@ -5,13 +5,10 @@ export class Port {
   readonly pins: Pin[];
   readonly name: string;
 
-  constructor(name: string, pinCount: number) {
+  constructor(name: string, pins: Pin[] = []) {
     this.name = name;
 
-    this.pins = Array.from(
-      { length: pinCount },
-      (_, index) => new Pin(index, PinMode.Input),
-    );
+    this.pins = pins;
   }
 
   getPin(pinNumber: number): Pin {

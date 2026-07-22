@@ -44,18 +44,14 @@ export class AVRCPU implements CPU {
     }
   }
 
-  constructor() {
+  constructor(gpio: GPIO) {
     const FLASH_SIZE = (32 * 1024) / 2; // 32KB flash size in words (16 bit)
 
     this.flash = new Uint16Array(FLASH_SIZE);
 
     this.cpu = new AVRCore(this.flash);
 
-    this.gpio = new GPIO([
-      new Port("PortB", 8),
-      new Port("PortC", 7),
-      new Port("PortD", 8),
-    ]);
+    this.gpio = gpio;
 
     this.portB = new AVRIOPort(this.cpu, portBConfig);
     this.portC = new AVRIOPort(this.cpu, portCConfig);
