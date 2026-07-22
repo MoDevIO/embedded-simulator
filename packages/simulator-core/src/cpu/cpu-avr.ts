@@ -24,6 +24,7 @@ export class AVRCPU implements CPU {
   private portD: AVRIOPort;
 
   private bindPort(avrPort: AVRIOPort, gpioPort: Port): void {
+    // AVR -> GPIO
     avrPort.addListener(() => {
       for (const pin of gpioPort.pins) {
         const state =
@@ -33,6 +34,14 @@ export class AVRCPU implements CPU {
         pin.setState(state);
       }
     });
+
+    // GPIO -> AVR
+    for (const pin of gpioPort.pins) {
+      pin.addListener((state) => {
+        const avrState = state === PinState.High;
+        avrPort.setPin(pin.number, avrState);
+      });
+    }
   }
 
   constructor() {
@@ -51,17 +60,6 @@ export class AVRCPU implements CPU {
     this.portB = new AVRIOPort(this.cpu, portBConfig);
     this.portC = new AVRIOPort(this.cpu, portCConfig);
     this.portD = new AVRIOPort(this.cpu, portDConfig);
-
-    // Connect GPIO ports to AVR ports
-    // this.portB.addListener(() => {
-    //   const pin5 = this.gpio.getPort("PortB").getPin(5);
-    //   const pin5State =
-    //     this.portB.pinState(5) === AVRPinState.High
-    //       ? PinState.High
-    //       : PinState.Low;
-    //
-    //   pin5.setState(pin5State);
-    // });
 
     this.bindPort(this.portB, this.gpio.getPort("PortB"));
     this.bindPort(this.portC, this.gpio.getPort("PortC"));

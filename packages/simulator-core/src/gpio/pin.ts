@@ -4,13 +4,17 @@ export class Pin {
   readonly number: number;
 
   private state: PinState;
-
   private mode: PinMode;
+  private listeners: ((state: PinState) => void)[] = [];
 
   constructor(number: number, mode: PinMode) {
     this.number = number;
     this.mode = mode;
     this.state = PinState.Low;
+  }
+
+  addListener(listener: (state: PinState) => void): void {
+    this.listeners.push(listener);
   }
 
   getState(): PinState {
@@ -31,5 +35,10 @@ export class Pin {
     if (this.state === state) return;
 
     this.state = state;
+
+    // Send event to listeners
+    for (const listener of this.listeners) {
+      listener(state);
+    }
   }
 }
