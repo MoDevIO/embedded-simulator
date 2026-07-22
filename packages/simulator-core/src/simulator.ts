@@ -1,5 +1,7 @@
-import { CPU } from "./cpu/cpu";
-import { Scheduler } from "./scheduler/scheduler";
+import { parse } from "intel-hex";
+
+import type { CPU } from "./cpu/cpu.js";
+import { Scheduler } from "./scheduler/scheduler.js";
 
 export class Simulator {
   private scheduler: Scheduler;
@@ -8,7 +10,11 @@ export class Simulator {
     this.scheduler = new Scheduler(cpu);
   }
 
-  loadFirmware(firmware: Uint8Array) {
+  loadFirmware(hex: string): void {
+    const result = parse(hex);
+
+    const firmware = new Uint8Array(result.data);
+
     this.cpu.loadFirmware(firmware);
   }
 

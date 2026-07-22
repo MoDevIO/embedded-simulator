@@ -1,4 +1,4 @@
-import { CPU } from "../cpu/cpu";
+import type { CPU } from "../cpu/cpu.js";
 
 export class Scheduler {
   private running: boolean = false;
