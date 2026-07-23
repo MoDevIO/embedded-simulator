@@ -33,9 +33,14 @@ export class Simulator {
     this.cpu.loadFirmware(firmware);
   }
 
-  start() {
+  start(timeout?: number) {
     this.cpu.reset();
     this.scheduler.start();
+    if (timeout) {
+      setTimeout(() => {
+        this.scheduler.stop();
+      }, timeout);
+    }
   }
 
   stop() {
