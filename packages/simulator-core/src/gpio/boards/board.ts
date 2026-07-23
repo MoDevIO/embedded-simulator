@@ -22,4 +22,6 @@ export interface Board {
   readonly gpio: GPIO;
   readonly pinMapping: PinMapping;
   readonly pwmPinMapping: PWMPinMapping[];
+
+  readonly frequency: number;
 }

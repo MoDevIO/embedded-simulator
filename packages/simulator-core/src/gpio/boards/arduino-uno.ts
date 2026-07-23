@@ -9,6 +9,8 @@ export class ArduinoUno implements Board {
   readonly pinMapping;
   readonly pwmPinMapping;
 
+  readonly frequency = 16_000_000; // 16 MHz
+
   constructor() {
     // prettier-ignore
     this.gpio = new GPIO([

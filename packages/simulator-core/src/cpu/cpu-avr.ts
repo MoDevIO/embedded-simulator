@@ -12,6 +12,8 @@ import {
   timer0Config,
   timer1Config,
   timer2Config,
+  AVRUSART,
+  usart0Config,
 } from "avr8js";
 
 import type { CPU } from "./cpu.js";
@@ -28,6 +30,8 @@ export class AVRCPU implements CPU {
   readonly board: Board;
 
   private adc: AVRADC;
+
+  readonly usart: AVRUSART;
 
   private portB: AVRIOPort;
   private portC: AVRIOPort;
@@ -65,6 +69,8 @@ export class AVRCPU implements CPU {
     this.gpio = board.gpio;
 
     this.adc = new AVRADC(this.cpu, adcConfig);
+
+    this.usart = new AVRUSART(this.cpu, usart0Config, board.frequency);
 
     this.portB = new AVRIOPort(this.cpu, portBConfig);
     this.portC = new AVRIOPort(this.cpu, portCConfig);

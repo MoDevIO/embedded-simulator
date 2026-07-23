@@ -4,10 +4,12 @@ import type { CPU } from "./cpu/cpu.js";
 import { Scheduler } from "./scheduler/scheduler.js";
 import { GPIO } from "./gpio/gpio.js";
 import { Board } from "./gpio/boards/board.js";
+import { SerialMonitor } from "./serial/serial-monitor.js";
 import { PinValue } from "./gpio/state.js";
 
 export class Simulator {
   private scheduler: Scheduler;
+  readonly serialMonitor: SerialMonitor;
 
   readonly gpio: GPIO;
   readonly cpu: CPU;
@@ -19,6 +21,8 @@ export class Simulator {
     this.cpu = cpu;
     this.gpio = cpu.gpio;
     this.board = board;
+
+    this.serialMonitor = new SerialMonitor(cpu);
   }
 
   loadFirmware(hex: string): void {
@@ -72,5 +76,13 @@ export class Simulator {
     }
 
     this.cpu.write(mapping.port, mapping.pin, value);
+  }
+
+  addSerialListener(callback: (data: string) => void): void {
+    this.serialMonitor.onData(callback);
+  }
+
+  sendSerialData(data: string): void {
+    this.serialMonitor.write(data);
   }
 }

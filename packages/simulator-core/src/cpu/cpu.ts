@@ -4,6 +4,8 @@ import { PinValue } from "../gpio/state.js";
 export interface CPU {
   gpio: GPIO;
 
+  usart?: any;
+
   loadFirmware(firmware: Uint8Array): void;
 
   reset(): void;
