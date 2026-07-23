@@ -8,24 +8,34 @@ import {
   portDConfig,
   AVRADC,
   adcConfig,
+  AVRTimer,
+  timer0Config,
+  timer1Config,
+  timer2Config,
 } from "avr8js";
 
 import type { CPU } from "./cpu.js";
 import { GPIO } from "../gpio/gpio.js";
 import { Port } from "../gpio/port.js";
-import { PinState, PinType, PinValue, PinCapabilities } from "../gpio/state.js";
+import { PinState, PinValue } from "../gpio/state.js";
+import { Board } from "../gpio/boards/board.js";
 
 export class AVRCPU implements CPU {
   private cpu: AVRCore;
   private flash: Uint16Array;
 
   readonly gpio: GPIO;
+  readonly board: Board;
 
   private adc: AVRADC;
 
   private portB: AVRIOPort;
   private portC: AVRIOPort;
   private portD: AVRIOPort;
+
+  private timer0: AVRTimer;
+  private timer1: AVRTimer;
+  private timer2: AVRTimer;
 
   private bindPort(avrPort: AVRIOPort, gpioPort: Port): void {
     // AVR -> GPIO
@@ -48,20 +58,25 @@ export class AVRCPU implements CPU {
     }
   }
 
-  constructor(gpio: GPIO) {
+  constructor(board: Board) {
     const FLASH_SIZE = (32 * 1024) / 2; // 32KB flash size in words (16 bit)
 
     this.flash = new Uint16Array(FLASH_SIZE);
 
     this.cpu = new AVRCore(this.flash);
 
-    this.gpio = gpio;
+    this.board = board;
+    this.gpio = board.gpio;
 
     this.adc = new AVRADC(this.cpu, adcConfig);
 
     this.portB = new AVRIOPort(this.cpu, portBConfig);
     this.portC = new AVRIOPort(this.cpu, portCConfig);
     this.portD = new AVRIOPort(this.cpu, portDConfig);
+
+    this.timer0 = new AVRTimer(this.cpu, timer0Config);
+    this.timer1 = new AVRTimer(this.cpu, timer1Config);
+    this.timer2 = new AVRTimer(this.cpu, timer2Config);
 
     this.bindPort(this.portB, this.gpio.getPort("PortB"));
     this.bindPort(this.portC, this.gpio.getPort("PortC"));
@@ -93,6 +108,23 @@ export class AVRCPU implements CPU {
 
   getFrequency(): number {
     return 16_000_000; // 16 MHz
+  }
+
+  getPWM(port: string, pin: number) {
+    const pwm = this.board.pwmPinMapping.find(
+      (pwm) => pwm.port === port && pwm.pin === pin,
+    );
+
+    if (!pwm) {
+      throw new Error(`Pin ${port}${pin} does not support PWM`);
+    }
+
+    const value = this.cpu.data[pwm.register];
+
+    return {
+      value,
+      dutyCycle: value / pwm.max,
+    };
   }
 
   read(port: string, pin: number): PinValue {

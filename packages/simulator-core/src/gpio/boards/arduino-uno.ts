@@ -13,9 +13,18 @@ type PinMapping = {
   };
 };
 
+type PWMPinMapping = {
+  port: string;
+  pin: number;
+  timer: "timer0" | "timer1" | "timer2";
+  register: number;
+  max: number;
+};
+
 export class ArduinoUno implements Board {
   readonly gpio: GPIO;
   readonly pinMapping: PinMapping;
+  readonly pwmPinMapping: PWMPinMapping[];
 
   constructor() {
     // prettier-ignore
@@ -79,5 +88,14 @@ export class ArduinoUno implements Board {
         A5: { port: "PortC", pin: 5 }, // PC5 (SCL)
       },
     };
+
+    this.pwmPinMapping = [
+      { port: "PortD", pin: 3, timer: "timer2", register: 0xb4, max: 255 }, // D3  (OCR2B)
+      { port: "PortD", pin: 5, timer: "timer0", register: 0x48, max: 255 }, // D5  (OCR0B)
+      { port: "PortD", pin: 6, timer: "timer0", register: 0x47, max: 255 }, // D6  (OCR0A)
+      { port: "PortB", pin: 1, timer: "timer1", register: 0x88, max: 255 }, // D9  (OCR1AL)
+      { port: "PortB", pin: 2, timer: "timer1", register: 0x8a, max: 255 }, // D10 (OCR1BL)
+      { port: "PortB", pin: 3, timer: "timer2", register: 0xb3, max: 255 }, // D11 (OCR2A)
+    ];
   }
 }
