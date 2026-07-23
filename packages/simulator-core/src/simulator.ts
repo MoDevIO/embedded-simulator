@@ -53,7 +53,7 @@ export class Simulator {
   readPin(pin: number | `A${number}`): PinValue {
     const mapping =
       this.board.pinMapping.digital[pin as number] ??
-      this.board.pinMapping.analog[pin];
+      this.board.pinMapping.analog[pin as `A${number}`];
 
     if (!mapping) {
       throw new Error(`Pin ${pin} does not exist`);
@@ -65,7 +65,7 @@ export class Simulator {
   writePin(pin: number | `A${number}`, value: PinValue): void {
     const mapping =
       this.board.pinMapping.digital[pin as number] ??
-      this.board.pinMapping.analog[pin];
+      this.board.pinMapping.analog[pin as `A${number}`];
 
     if (!mapping) {
       throw new Error(`Pin ${pin} does not exist`);

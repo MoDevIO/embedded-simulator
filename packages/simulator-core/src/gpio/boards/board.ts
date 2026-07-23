@@ -1,20 +1,25 @@
 import { GPIO } from "../gpio.js";
 
+type PinMapping = {
+  digital: {
+    [pinNumber: number]: { port: string; pin: number };
+  };
+  analog: {
+    [pinName: `A${number}`]: { port: string; pin: number };
+  };
+};
+
+type PWMPinMapping = {
+  port: string;
+  pin: number;
+  timer: string;
+  ocrRegister: number;
+  controlRegister: number;
+  comBit: number;
+};
+
 export interface Board {
   readonly gpio: GPIO;
-  readonly pinMapping: {
-    digital: {
-      [pinNumber: number]: { port: string; pin: number };
-    };
-    analog: {
-      [pinName: string]: { port: string; pin: number };
-    };
-  };
-  readonly pwmPinMapping: {
-    port: string;
-    pin: number;
-    timer: "timer0" | "timer1" | "timer2";
-    register: number;
-    max: number;
-  }[];
+  readonly pinMapping: PinMapping;
+  readonly pwmPinMapping: PWMPinMapping[];
 }

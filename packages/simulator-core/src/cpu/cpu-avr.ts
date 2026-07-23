@@ -110,6 +110,20 @@ export class AVRCPU implements CPU {
     return 16_000_000; // 16 MHz
   }
 
+  isPWM(port: string, pin: number): boolean {
+    const pwm = this.board.pwmPinMapping.find(
+      (pwm) => pwm.port === port && pwm.pin === pin,
+    );
+
+    if (!pwm) {
+      return false;
+    }
+
+    const controlRegisterValue = this.cpu.data[pwm.controlRegister];
+
+    return (controlRegisterValue & (1 << pwm.comBit)) !== 0;
+  }
+
   getPWM(port: string, pin: number) {
     const pwm = this.board.pwmPinMapping.find(
       (pwm) => pwm.port === port && pwm.pin === pin,
@@ -119,18 +133,23 @@ export class AVRCPU implements CPU {
       throw new Error(`Pin ${port}${pin} does not support PWM`);
     }
 
-    const value = this.cpu.data[pwm.register];
+    const value = this.cpu.data[pwm.ocrRegister];
 
     return {
       value,
-      dutyCycle: value / pwm.max,
+      dutyCycle: value / 255,
     };
   }
 
   read(port: string, pin: number): PinValue {
     const gpioPin = this.gpio.getPort(port).getPin(pin);
     if (gpioPin.getCapabilities().pwm) {
-      return 404; // this is a placeholder and it is getting implemented later
+      if (this.isPWM(port, pin)) {
+        const pwm = this.getPWM(port, pin);
+        return pwm.value;
+      } else {
+        return gpioPin.getValue();
+      }
     } else {
       const state = gpioPin.getValue();
       return state;
