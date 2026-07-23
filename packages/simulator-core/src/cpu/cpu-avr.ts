@@ -33,10 +33,6 @@ export class AVRCPU implements CPU {
   private portC: AVRIOPort;
   private portD: AVRIOPort;
 
-  private timer0: AVRTimer;
-  private timer1: AVRTimer;
-  private timer2: AVRTimer;
-
   private bindPort(avrPort: AVRIOPort, gpioPort: Port): void {
     // AVR -> GPIO
     avrPort.addListener(() => {
@@ -74,9 +70,9 @@ export class AVRCPU implements CPU {
     this.portC = new AVRIOPort(this.cpu, portCConfig);
     this.portD = new AVRIOPort(this.cpu, portDConfig);
 
-    this.timer0 = new AVRTimer(this.cpu, timer0Config);
-    this.timer1 = new AVRTimer(this.cpu, timer1Config);
-    this.timer2 = new AVRTimer(this.cpu, timer2Config);
+    new AVRTimer(this.cpu, timer0Config);
+    new AVRTimer(this.cpu, timer1Config);
+    new AVRTimer(this.cpu, timer2Config);
 
     this.bindPort(this.portB, this.gpio.getPort("PortB"));
     this.bindPort(this.portC, this.gpio.getPort("PortC"));
