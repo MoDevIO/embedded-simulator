@@ -37,7 +37,7 @@ export class SerialMonitor {
     }
 
     for (const char of data) {
-      this.cpu.usart.transmitByte(char.charCodeAt(0));
+      this.cpu.usart.writeByte(char.charCodeAt(0));
     }
   }
 }
