@@ -59,7 +59,7 @@ export class Simulator {
       throw new Error(`Pin ${pin} does not exist`);
     }
 
-    return this.gpio.read(mapping.port, mapping.pin);
+    return this.cpu.read(mapping.port, mapping.pin);
   }
 
   writePin(pin: number | `A${number}`, value: PinValue): void {
@@ -71,6 +71,6 @@ export class Simulator {
       throw new Error(`Pin ${pin} does not exist`);
     }
 
-    this.gpio.write(mapping.port, mapping.pin, value);
+    this.cpu.write(mapping.port, mapping.pin, value);
   }
 }

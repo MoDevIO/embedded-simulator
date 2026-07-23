@@ -1,7 +1,7 @@
 import { GPIO } from "../gpio.js";
 import { Port } from "../port.js";
 import { Pin } from "../pin.js";
-import { PinMode, PinType } from "../state.js";
+import { PinMode } from "../state.js";
 import { Board } from "./board.js";
 
 type PinMapping = {
@@ -18,39 +18,40 @@ export class ArduinoUno implements Board {
   readonly pinMapping: PinMapping;
 
   constructor() {
+    // prettier-ignore
     this.gpio = new GPIO([
       new Port("PortB", [
-        new Pin(0, PinMode.Input, PinType.Digital),
-        new Pin(1, PinMode.Input, PinType.Digital),
-        new Pin(2, PinMode.Input, PinType.Digital),
-        new Pin(3, PinMode.Input, PinType.Digital),
-        new Pin(4, PinMode.Input, PinType.Digital),
-        new Pin(5, PinMode.Input, PinType.Digital),
-        new Pin(6, PinMode.Input, PinType.Digital),
-        new Pin(7, PinMode.Input, PinType.Digital),
+        new Pin(0, PinMode.Input, { digital: true, adc: false, pwm: false }, ), // D8
+        new Pin(1, PinMode.Input, { digital: true, adc: false, pwm: true  }), // D9
+        new Pin(2, PinMode.Input, { digital: true, adc: false, pwm: true  }), // D10
+        new Pin(3, PinMode.Input, { digital: true, adc: false, pwm: true  }), // D11
+        new Pin(4, PinMode.Input, { digital: true, adc: false, pwm: false }), // D12
+        new Pin(5, PinMode.Input, { digital: true, adc: false, pwm: false }), // D13
+        new Pin(6, PinMode.Input, { digital: false, adc: false, pwm: false }), // XTAL1
+        new Pin(7, PinMode.Input, { digital: false, adc: false, pwm: false }), // XTAL2
       ]),
 
       new Port("PortC", [
-        new Pin(0, PinMode.Input, PinType.Digital),
-        new Pin(1, PinMode.Input, PinType.Digital),
-        new Pin(2, PinMode.Input, PinType.Digital),
-        new Pin(3, PinMode.Input, PinType.Digital),
-        new Pin(4, PinMode.Input, PinType.Digital),
-        new Pin(5, PinMode.Input, PinType.Digital),
-        new Pin(6, PinMode.Input, PinType.Digital),
+        new Pin(0, PinMode.Input, { digital: true, adc: true, pwm: false }), // A0 / D14
+        new Pin(1, PinMode.Input, { digital: true, adc: true, pwm: false }), // A1 / D15
+        new Pin(2, PinMode.Input, { digital: true, adc: true, pwm: false }), // A2 / D16
+        new Pin(3, PinMode.Input, { digital: true, adc: true, pwm: false }), // A3 / D17
+        new Pin(4, PinMode.Input, { digital: true, adc: true, pwm: false }), // A4 / D18 / SDA
+        new Pin(5, PinMode.Input, { digital: true, adc: true, pwm: false }), // A5 / D19 / SCL
+        new Pin(6, PinMode.Input, { digital: false, adc: false, pwm: false }), // RESET
       ]),
 
       new Port("PortD", [
-        new Pin(0, PinMode.Input, PinType.Digital),
-        new Pin(1, PinMode.Input, PinType.Digital),
-        new Pin(2, PinMode.Input, PinType.Digital),
-        new Pin(3, PinMode.Input, PinType.Digital),
-        new Pin(4, PinMode.Input, PinType.Digital),
-        new Pin(5, PinMode.Input, PinType.Digital),
-        new Pin(6, PinMode.Input, PinType.Digital),
-        new Pin(7, PinMode.Input, PinType.Digital),
+        new Pin(0, PinMode.Input, { digital: true, adc: false, pwm: false }), // D0
+        new Pin(1, PinMode.Input, { digital: true, adc: false, pwm: false }), // D1
+        new Pin(2, PinMode.Input, { digital: true, adc: false, pwm: false }), // D2
+        new Pin(3, PinMode.Input, { digital: true, adc: false, pwm: true  }), // D3
+        new Pin(4, PinMode.Input, { digital: true, adc: false, pwm: false }), // D4
+        new Pin(5, PinMode.Input, { digital: true, adc: false, pwm: true  }), // D5
+        new Pin(6, PinMode.Input, { digital: true, adc: false, pwm: true  }), // D6
+        new Pin(7, PinMode.Input, { digital: true, adc: false, pwm: false }), // D7
       ]),
-    ]);
+  ]);
 
     this.pinMapping = {
       digital: {

@@ -12,6 +12,13 @@ export enum PinMode {
 export enum PinType {
   Digital,
   Analog,
+  Unassigned,
 }
+
+export type PinCapabilities = {
+  digital: boolean;
+  adc: boolean;
+  pwm: boolean;
+};
 
 export type PinValue = PinState | number;

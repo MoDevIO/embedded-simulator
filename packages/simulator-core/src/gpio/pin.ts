@@ -1,5 +1,5 @@
 import { PinState, PinMode, PinType } from "./state.js";
-import type { PinValue } from "./state.js";
+import type { PinValue, PinCapabilities } from "./state.js";
 
 export class Pin {
   readonly number: number;
@@ -7,18 +7,29 @@ export class Pin {
   private type: PinType;
   private value: PinValue;
   private mode: PinMode;
+  private capabilities: PinCapabilities;
 
   private listeners: ((value: PinValue) => void)[] = [];
 
-  constructor(number: number, mode: PinMode, type: PinType = PinType.Digital) {
+  constructor(
+    number: number,
+    mode: PinMode,
+    capabilities: PinCapabilities,
+    type: PinType = PinType.Unassigned,
+  ) {
     this.number = number;
     this.type = type;
     this.mode = mode;
     this.value = PinState.Low;
+    this.capabilities = capabilities;
   }
 
   addListener(listener: (value: PinValue) => void): void {
     this.listeners.push(listener);
+  }
+
+  getCapabilities(): PinCapabilities {
+    return this.capabilities;
   }
 
   getType(): PinType {
